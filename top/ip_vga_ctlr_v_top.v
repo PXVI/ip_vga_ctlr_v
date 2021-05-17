@@ -37,10 +37,14 @@
 // Module Description
 // ++++++++++++++++++
 //
-// 1. Support for basic 640x480 ( 640px Horizontal, 480px Vertical ) - Clock ( 25 MHz )
+// 1. Support for basic 640x480 ( 640px Horizontal, 480px Vertical ) - Clock ( 25 MHz ) - ~2.3 MB of frame buffer ( double buffer )
 // 2. Supports parameterized HSYNC width, VSYNC width, H Front Porch, H Back
 //    Porch, V Front Porch, Back Porch
 // 3. Supports Wishbone slave interface
+//      - 32bit data bus
+//      - 32bit address bus
+//      - 8bit granularity
+// 4. Supports double frame buffers
 
 module ip_vga_ctlr_v_top `IP_VGA_CTLR_V_PARAM_DECL (  
 
@@ -48,10 +52,27 @@ module ip_vga_ctlr_v_top `IP_VGA_CTLR_V_PARAM_DECL (
     input clk,
     input resetn,
     
-    // Inputs
-    // Wishbone Slave TODO
+    // Wishbone Slave Interface
+    input CLK_I,
+    input RST_I,
+    input [DATA_WIDTH-1:0] DAT_I,
+    output [DATA_WIDTH-1:0] DAT_O,
+    input TGI_I,
+    output TGI_O,
+
+    output ACK_O,
+    input [ADDRESS_WIDTH-1:0] ADR_I,
+    input CYC_I,
+    output STALL_O,
+    output ERR_O,
+    input LOCK_I,
+    input [SEL_WIDTH-1:0] SEL_I,
+    input STB_I,
+    input TGA_I, // Optional
+    input TGC_I, // Optional
+    input WE_I, // Write Enable ( 0/Read, 1/Write )
     
-    // Outputs
+    // VGA Interface
     output HSYNC, // Horizontal Sync
     output VSYNC, // Vertical Sync
     output [7:0] R, // Red
@@ -59,6 +80,96 @@ module ip_vga_ctlr_v_top `IP_VGA_CTLR_V_PARAM_DECL (
     output [7:0] B // Blue
 );
 
+    reg [BUF_COUNT-1:0] loading_frame_r;
+    reg [BUF_COUNT-1:0] frame_loaded_r;
+
+    wire [BUF_COUNT-1:0] loading_frame_w; // Frame is being loaded using wishbone
+    wire [BUF_COUNT-1:0] frame_loaded_w; // Frame/s have been loaded using WB
+    wire frame_ready_w; // Empty frame buffers are avialable to be loaded by WB
+
+    assign frame_loaded_w = frame_loaded_r;
+    assign loading_frame_w = loading_frame_r;
+    assign frame_ready_w = |loading_frame_w; // Frame aviallable to be loaded
+
+    // -------------
+    // Address Space
+    // -------------
+    
+    /* 32 bit Address * ( Byte addressable )
+     * ============== *
+     * ============== *
+     * ============== *
+     * ============== *
+     * ============== *
+     * ============== *
+     * ============== *
+     * ============== *
+     * ============== *
+     * ============== *
+     * ============== *
+     * = DS  Reg 1 == * +4 ( Reprogrammable on the fly )
+     * = CFG Reg 4 == * +3
+     * = CFG Reg 3 == * +2
+     * = CFG Reg 2 == * +1
+     * = CFG Reg 1 == * 32'h0000_0000 ( CFG Reg 1 Address is fixed by the designer ) ( Holds the base address of the DS base address in the data address space )
+     */
+
+    // -------------------
+    // Wishbone Data Space
+    // -------------------
+    reg [32-1:0] IP_DS_REG_r;
+
+    always@( posedge CLK_I or posedge RST_I )
+    begin
+        IP_DS_REG_r <= IP_DS_REG_r;
+
+        if( ~RST_I )
+        begin
+            IP_DS_REG_r <= 0;
+        end
+        else
+        begin
+            // WB write of data has been written on CFG Reg 1
+        end
+    end
+
+    // ------------------------------------
+    // Frames Declaration / Memory Instance
+    // ------------------------------------
+    reg [32-1:0] FRAME_r[BUF_COUNT-1:0][(WIDTH*HEIGHT)-1:0]; // Layout - 32bits ( 8b(R), 8b(G), 8b(B), 8b(N/A) ) * ( Heigth x Width ) * BUF_COUNT
+
+    // -------------
+    // Frame Loading
+    // -------------
+    always@( posedge CLK_I or posedge RST_I )
+    begin : frame_loading
+        integer i,j;
+
+        for( i = 0; i < (BUF_COUNT); i = i + 1 )
+        begin
+            for( j = 0; j < (WIDTH*HEIGHT); j = j + 1 )
+            begin
+                FRAME_r[i][j] = FRAME_r[i][j];
+            end
+        end
+
+        if( ~RST_I )
+        begin
+            // No need to initialize any values in the FRAME memory
+        end
+        else
+        begin
+        end
+    end : frame_loading
+
+    // ----------------------
+    // Frame Buffer Selection
+    // ----------------------
+
+
+    // ----------------
+    // VGA Driver Block
+    // ----------------
     
     // ---------------
     // Dump Generation

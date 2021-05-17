@@ -34,5 +34,20 @@
 // Declaration Parameters
 // ----------------------
 `define IP_VGA_CTLR_V_PARAM_DECL #( \
-                                        parameter WORD_LENGTH = 8 \
+                                        parameter ADDRESS_WIDTH = 32, \
+                                        parameter DATA_WIDTH = 32, /* Supported - 8/16/32/64 */ \
+                                        parameter SEL_WIDTH = 4, /* $clog2( DATA_WIDTH ) */ \
+                                        parameter WIDTH = 640, \
+                                        parameter HEIGHT = 480, \
+                                        parameter HSYNC_WIDTH = 2, \
+                                        parameter VSYNC_WIDTH = 2, \
+                                        parameter HFP = 2, \
+                                        parameter HBP = 2, \
+                                        parameter VFP = 2, \
+                                        parameter VBP = 2, \
+                                        parameter BUF_COUNT = 2, /* Frame buffer count */ \
+                                        parameter IP_CS_BASE_ADDR = 32'b0, /* Config space base address : FIXED ( Pre determined by the designer ) */ \
+                                        parameter IP_CS_OFFS_SIZE = 16, /* Config space size in bytes : FIXED */ \
+                                        parameter IP_DS_BASE_ADDR = IP_CS_BASE_ADDR + IP_CS_OFFS_SIZE, /* Data space base address */ \
+                                        parameter IP_DS_OFFS_SIZE = 4 /* Config space size in bytes : FIXED */ \
                                         )
