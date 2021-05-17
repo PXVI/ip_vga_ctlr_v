@@ -33,6 +33,8 @@
 `include "ip_vga_ctlr_v_top_defines.vh"
 `include "ip_vga_ctlr_v_top_parameters.vh"
 
+`include "ip_frame_buf_v_top.v"
+
 // ++++++++++++++++++
 // Module Description
 // ++++++++++++++++++
@@ -80,17 +82,6 @@ module ip_vga_ctlr_v_top `IP_VGA_CTLR_V_PARAM_DECL (
     output [7:0] B // Blue
 );
 
-    reg [BUF_COUNT-1:0] loading_frame_r;
-    reg [BUF_COUNT-1:0] frame_loaded_r;
-
-    wire [BUF_COUNT-1:0] loading_frame_w; // Frame is being loaded using wishbone
-    wire [BUF_COUNT-1:0] frame_loaded_w; // Frame/s have been loaded using WB
-    wire frame_ready_w; // Empty frame buffers are avialable to be loaded by WB
-
-    assign frame_loaded_w = frame_loaded_r;
-    assign loading_frame_w = loading_frame_r;
-    assign frame_ready_w = |loading_frame_w; // Frame aviallable to be loaded
-
     // -------------
     // Address Space
     // -------------
@@ -136,35 +127,6 @@ module ip_vga_ctlr_v_top `IP_VGA_CTLR_V_PARAM_DECL (
     // ------------------------------------
     // Frames Declaration / Memory Instance
     // ------------------------------------
-    reg [32-1:0] FRAME_r[BUF_COUNT-1:0][(WIDTH*HEIGHT)-1:0]; // Layout - 32bits ( 8b(R), 8b(G), 8b(B), 8b(N/A) ) * ( Heigth x Width ) * BUF_COUNT
-
-    // -------------
-    // Frame Loading
-    // -------------
-    always@( posedge CLK_I or posedge RST_I )
-    begin : frame_loading
-        integer i,j;
-
-        for( i = 0; i < (BUF_COUNT); i = i + 1 )
-        begin
-            for( j = 0; j < (WIDTH*HEIGHT); j = j + 1 )
-            begin
-                FRAME_r[i][j] = FRAME_r[i][j];
-            end
-        end
-
-        if( ~RST_I )
-        begin
-            // No need to initialize any values in the FRAME memory
-        end
-        else
-        begin
-        end
-    end : frame_loading
-
-    // ----------------------
-    // Frame Buffer Selection
-    // ----------------------
 
 
     // ----------------
