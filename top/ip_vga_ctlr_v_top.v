@@ -82,6 +82,8 @@ module ip_vga_ctlr_v_top `IP_VGA_CTLR_V_PARAM_DECL (
     output [7:0] B // Blue
 );
 
+    /* verilator lint_off MULTITOP */
+
     // -------------
     // Address Space
     // -------------
