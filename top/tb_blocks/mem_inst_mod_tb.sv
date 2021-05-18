@@ -1,8 +1,8 @@
 /* -----------------------------------------------------------------------------------
  * Module Name  :
- * Date Created : 00:24:14 IST, 16 May, 2021 [ Sunday ]
+ * Date Created : 23:12:09 IST, 18 May, 2021 [ Tuesday ]
  *
- * Author       : k-sva
+ * Author       : pxvi
  * Description  :
  * -----------------------------------------------------------------------------------
 
@@ -30,18 +30,38 @@
 
  * ----------------------------------------------------------------------------------- */
 
-// Make Sure You Have Set The $WORK_HOME Path to the VIP
+`include "mem_inst_mod.v"
 
-// Compile List
+module mem_inst_mod_tb;
 
-// If the UVM Path Can't be given directly
-//+incdir+$WORK_HOME/sim_run/uvm_files/
-// else
-//+incdir+$UVM_PATH/
+    // Simulate this with SystemVerilog only
 
-+incdir+$IP_VGA_CTLR_V_HOME/common/
-+incdir+$IP_VGA_CTLR_V_HOME/top/ip_blocks
-+incdir+$IP_VGA_CTLR_V_HOME/top/tb_blocks
-+incdir+$IP_VGA_CTLR_V_HOME/top/
+    parameter DATA_WIDTH = 32,
+    parameter ADDR_WIDTH = 32,
+    parameter TOTAL_SIZE_IN_BYTES = 640*480
 
-// User Specific Defines
+    // Global Inputs
+    reg clk_r_t;
+    reg resetn_r_t;
+
+    // Inputs
+    reg [DATA_WIDTH-1:0] data_in_r_t;
+    reg [ADDR_WIDTH-1:0] addr_in_r_t;
+    reg [ADDR_WIDTH-1:0] addr_out_r_t;
+    reg we_r_t;
+
+    // Outputs
+    wire [DATA_WIDTH-1:0] data_out_w_t;
+
+    // IP Instance
+    mem_inst_mod mem    (
+        .clk(),
+        .resetn(),
+        .data_in(),
+        .addr_in(),
+        .addr_out(),
+        .we(),
+        .data_out()
+    );
+
+endmodule

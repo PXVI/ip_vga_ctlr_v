@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------------------------------
- * Module Name  : mem_inst_v
+ * Module Name  : mem_inst_mod
  * Date Created : 13:35:42 IST, 17 May, 2021 [ Monday ]
  *
  * Author       : pxvi
@@ -30,7 +30,7 @@
 
  * ----------------------------------------------------------------------------------- */
 
-module mem_inst_v_top   #(
+module mem_inst_mod     #(
     parameter DATA_WIDTH = 32,
     parameter ADDR_WIDTH = 32,
     parameter TOTAL_SIZE_IN_BYTES = 640*480

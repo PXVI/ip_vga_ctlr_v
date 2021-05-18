@@ -1,8 +1,8 @@
 /* -----------------------------------------------------------------------------------
  * Module Name  :
- * Date Created : 00:24:14 IST, 16 May, 2021 [ Sunday ]
+ * Date Created : 23:12:27 IST, 18 May, 2021 [ Tuesday ]
  *
- * Author       : k-sva
+ * Author       : pxvi
  * Description  :
  * -----------------------------------------------------------------------------------
 
@@ -29,19 +29,3 @@
    SOFTWARE.
 
  * ----------------------------------------------------------------------------------- */
-
-// Make Sure You Have Set The $WORK_HOME Path to the VIP
-
-// Compile List
-
-// If the UVM Path Can't be given directly
-//+incdir+$WORK_HOME/sim_run/uvm_files/
-// else
-//+incdir+$UVM_PATH/
-
-+incdir+$IP_VGA_CTLR_V_HOME/common/
-+incdir+$IP_VGA_CTLR_V_HOME/top/ip_blocks
-+incdir+$IP_VGA_CTLR_V_HOME/top/tb_blocks
-+incdir+$IP_VGA_CTLR_V_HOME/top/
-
-// User Specific Defines

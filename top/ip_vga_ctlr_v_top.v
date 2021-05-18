@@ -33,7 +33,7 @@
 `include "ip_vga_ctlr_v_top_defines.vh"
 `include "ip_vga_ctlr_v_top_parameters.vh"
 
-`include "ip_frame_buf_v_top.v"
+`include "ip_frame_buf_mod.v"
 
 // ++++++++++++++++++
 // Module Description
@@ -129,7 +129,9 @@ module ip_vga_ctlr_v_top `IP_VGA_CTLR_V_PARAM_DECL (
     // ------------------------------------
     // Frames Declaration / Memory Instance
     // ------------------------------------
-
+    ip_frame_buf_mod frames (
+        
+    );
 
     // ----------------
     // VGA Driver Block

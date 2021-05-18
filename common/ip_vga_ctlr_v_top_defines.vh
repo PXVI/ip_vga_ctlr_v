@@ -47,13 +47,13 @@
         initial begin \
             $display( "ip_vga_ctlr_v : VCD Dump Generation Is Enabled ( ip_vga_ctlr_v.vcd )" ); \
             $dumpfile( "ip_vga_ctlr_v.vcd" ); \
-            $dumpvard( 0, ip_vga_ctlr_v_top ); \
+            $dumpvars( 0, ip_vga_ctlr_v_top ); \
         end \
     `elsif ip_vga_ctlr_v_tb_dump_en \
         initial begin \
             $display( "ip_vga_ctlr_v_tb : VCD Dump Generation Is Enabled ( ip_vga_ctlr_v_tb.vcd )" ); \
             $dumpfile( "ip_vga_ctlr_v_tb.vcd" ); \
-            $dumpvard( 0, ip_vga_ctlr_v_tb_top ); \
+            $dumpvars( 0, ip_vga_ctlr_v_tb_top ); \
         end \
     `endif
 

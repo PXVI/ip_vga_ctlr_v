@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------------------------------
- * Module Name  : ip_frame_buf_v
+ * Module Name  : ip_frame_buf_mod
  * Date Created : 12:50:55 IST, 17 May, 2021 [ Monday ]
  *
  * Author       : pxvi
@@ -30,9 +30,9 @@
 
  * ----------------------------------------------------------------------------------- */
 
-`include "mem_inst_v_top.v"
+`include "mem_inst_mod.v"
 
-module ip_frame_buf_v_top   #(
+module ip_frame_buf_mod   #(
     parameter DATA_WIDTH = 32,
     parameter ADDR_WIDTH = 32,
     parameter TOTAL_SIZE_IN_PIXELS = 640*480
@@ -155,7 +155,7 @@ module ip_frame_buf_v_top   #(
 
 
     // Memory #1 Instance ( Frame 1 )
-    mem_inst_v_top frame0   (
+    mem_inst_mod frame0   (
         .clk( clk ),
         .resetn( resetn ),
         .data_in( data_in ),
@@ -166,7 +166,7 @@ module ip_frame_buf_v_top   #(
     );
 
     // Memory #2 Instance ( Frame 2 )
-    mem_inst_v_top frame1   (
+    mem_inst_mod frame1   (
         .clk( clk ),
         .resetn( resetn ),
         .data_in( data_in ),
